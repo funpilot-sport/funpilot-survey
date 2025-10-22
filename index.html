@@ -9,20 +9,10 @@
 
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: #DDE1C8;
       min-height: 100vh;
-      padding: 20px 20px 40px;
-    }
-
-    .header {
-      background: white;
-      border-radius: 20px 20px 0 0;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-      max-width: 800px;
-      width: 100%;
-      margin: 0 auto;
-      padding: 30px;
-      text-align: center;
+      padding: 0;
+      overflow-x: hidden;
     }
 
     .form-container {
@@ -30,86 +20,55 @@
       max-width: 800px;
       width: 100%;
       margin: 0 auto;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+      min-height: 100vh;
     }
 
-    .footer {
-      background: white;
-      border-radius: 0 0 20px 20px;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-      max-width: 800px;
+    .form-embed {
       width: 100%;
-      margin: 0 auto;
-      padding: 20px 30px;
-      text-align: center;
-      color: #666;
-      font-size: 0.9em;
-    }
-
-    h1 {
-      color: #333;
-      font-size: 1.8em;
-      margin-bottom: 10px;
-    }
-
-    .intro {
-      color: #666;
-      font-size: 1em;
-      line-height: 1.6;
-      margin-bottom: 20px;
+      height: 100vh;
+      border: none;
+      display: block;
     }
 
     .referral-section {
-      background: #f0f4ff;
-      border: 2px solid #667eea;
-      border-radius: 12px;
-      padding: 20px;
-      margin: 20px 0;
+      background: white;
+      max-width: 800px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 30px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
     }
 
     .referral-header {
       color: #667eea;
       font-weight: bold;
-      font-size: 0.95em;
-      margin-bottom: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-    }
-
-    .referral-code {
-      font-size: 1.3em;
-      font-weight: bold;
-      color: #333;
-      font-family: 'Courier New', monospace;
-      margin: 8px 0;
-      background: white;
-      padding: 10px;
-      border-radius: 6px;
+      font-size: 1.1em;
+      margin-bottom: 15px;
+      text-align: center;
     }
 
     .link-box {
-      background: white;
+      background: #f8f9fa;
       padding: 12px;
-      border-radius: 6px;
-      margin: 12px 0;
+      border-radius: 8px;
+      margin: 15px 0;
       word-break: break-all;
       font-family: monospace;
-      font-size: 0.75em;
+      font-size: 0.8em;
       color: #555;
-      border: 1px solid #ddd;
-      max-height: 60px;
+      border: 2px solid #667eea;
+      max-height: 80px;
       overflow-y: auto;
     }
 
     .btn {
       border: none;
-      padding: 10px 20px;
-      font-size: 0.9em;
+      padding: 12px 24px;
+      font-size: 0.95em;
       border-radius: 8px;
       cursor: pointer;
-      margin: 5px;
+      margin: 6px;
       transition: all 0.3s;
       text-decoration: none;
       display: inline-block;
@@ -128,8 +87,8 @@
 
     .btn-share {
       color: white;
-      font-size: 0.85em;
-      padding: 8px 16px;
+      font-size: 0.9em;
+      padding: 10px 18px;
     }
 
     .btn-whatsapp { background: #25d366; }
@@ -145,158 +104,49 @@
     .btn-telegram:hover { background: #0077b5; }
 
     .share-section {
-      margin-top: 15px;
-      padding-top: 15px;
-      border-top: 1px solid #ddd;
+      margin-top: 20px;
+      text-align: center;
     }
 
     .share-label {
-      font-size: 0.85em;
+      font-size: 0.95em;
       color: #666;
-      margin-bottom: 8px;
-    }
-
-    .bonus-box {
-      background: #fff3cd;
-      border: 2px solid #ffc107;
-      border-radius: 10px;
-      padding: 15px;
-      margin: 15px 0;
-      color: #856404;
-      font-size: 0.9em;
-    }
-
-    .bonus-box strong {
-      font-size: 1.05em;
-      display: block;
-      margin-bottom: 5px;
+      margin-bottom: 12px;
+      font-weight: 500;
     }
 
     .status-msg {
       color: #10b981;
       font-weight: bold;
       font-size: 0.9em;
-      margin-top: 8px;
+      margin-top: 10px;
       opacity: 0;
       transition: opacity 0.3s;
+      text-align: center;
     }
 
     .status-msg.show { opacity: 1; }
 
-    .form-embed {
-      width: 100%;
-      height: 2400px;
-      border: none;
-      display: block;
-    }
-
-    .collapse-toggle {
-      background: #667eea;
-      color: white;
-      border: none;
-      padding: 8px 16px;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 0.85em;
-      margin-top: 10px;
-    }
-
-    .collapse-toggle:hover {
-      background: #5568d3;
-    }
-
-    .collapsible {
-      max-height: 1000px;
-      overflow: hidden;
-      transition: max-height 0.3s ease;
-    }
-
-    .collapsible.collapsed {
-      max-height: 0;
-    }
-
-    .save-tip {
-      background: #e3f2fd;
-      border-left: 4px solid #2196f3;
-      padding: 12px;
-      margin: 15px 0;
-      border-radius: 4px;
-      font-size: 0.85em;
-      color: #1565c0;
+    .bookmark-tip {
+      margin-top: 30px;
+      padding-top: 20px;
+      border-top: 1px solid #e0e0e0;
+      text-align: center;
+      font-size: 0.7em;
+      color: #888;
+      line-height: 1.4;
     }
 
     @media (max-width: 600px) {
-      .header { padding: 20px; }
-      h1 { font-size: 1.4em; }
-      .referral-code { font-size: 1.1em; }
-      .btn { font-size: 0.85em; padding: 8px 14px; }
-      .form-embed { height: 3000px; }
+      .referral-section { padding: 20px; }
+      .btn { font-size: 0.85em; padding: 10px 16px; margin: 4px; }
+      .link-box { font-size: 0.7em; }
+      .bookmark-tip { font-size: 0.65em; }
     }
   </style>
 </head>
 <body>
-  <div class="header">
-    <h1>⚽ Nie wieder "Wer hat Zeit?" in die WhatsApp-Gruppe</h1>
-
-    <p class="intro">
-      Wir bauen eine App, die Sport-Events automatisch organisiert.<br>
-      <strong>Hilf uns mit 2 Minuten Feedback!</strong>
-    </p>
-
-    <div class="bonus-box">
-      <strong>🚀 DEIN BONUS:</strong>
-      Teile deinen persönlichen Link unten → <strong>lebenslang 50% Rabatt</strong> + früher Beta-Zugang für dich und deine Freunde!
-    </div>
-
-    <div class="referral-section">
-      <div class="referral-header">
-        <span>🎁</span>
-        <span>Dein einzigartiger Referral-Link</span>
-        <span>🎁</span>
-      </div>
-
-      <div class="referral-code" id="referralCode">Wird generiert...</div>
-
-      <div class="save-tip">
-        💡 <strong>Tipp:</strong> Setze ein Lesezeichen (Strg+D / Cmd+D) auf diese Seite, um deinen Link jederzeit wiederzufinden!
-      </div>
-
-      <div class="collapsible" id="linkDetails">
-        <div class="link-box" id="referralLink">Wird generiert...</div>
-
-        <button class="btn btn-copy" onclick="copyLink()">
-          📋 Link kopieren
-        </button>
-
-        <div class="status-msg" id="copyStatus">✅ Link kopiert!</div>
-
-        <div class="share-section">
-          <div class="share-label"><strong>📲 Direkt teilen:</strong></div>
-          <a href="#" id="whatsappShare" class="btn btn-share btn-whatsapp" target="_blank">
-            WhatsApp
-          </a>
-          <a href="#" id="facebookShare" class="btn btn-share btn-facebook" target="_blank">
-            Facebook
-          </a>
-          <a href="#" id="telegramShare" class="btn btn-share btn-telegram" target="_blank">
-            Telegram
-          </a>
-          <a href="#" id="emailShare" class="btn btn-share btn-email">
-            Email
-          </a>
-        </div>
-      </div>
-
-      <button class="collapse-toggle" onclick="toggleCollapse()" id="toggleBtn">
-        Link ausblenden ▲
-      </button>
-    </div>
-
-    <p style="color: #666; font-size: 0.9em; margin-top: 15px;">
-      ⬇️ <strong>Fülle die Umfrage direkt hier aus:</strong>
-    </p>
-  </div>
-
+  <!-- Google Form at the top -->
   <div class="form-container">
     <iframe
       id="googleForm"
@@ -309,24 +159,58 @@
     </iframe>
   </div>
 
-  <div class="footer">
-    Beta-Launch in 4-6 Wochen 🚀<br>
-    <small>Dein Referral-Code: <span id="footerCode"></span></small>
+  <!-- Referral section at the bottom -->
+  <div class="referral-section">
+    <div class="referral-header">
+      🎁 Teile deinen persönlichen Link & erhalte 50% Rabatt auf die ersten 3 Monate
+    </div>
+
+    <div class="link-box" id="referralLink">Wird generiert...</div>
+
+    <div style="text-align: center;">
+      <button class="btn btn-copy" onclick="copyLink()">
+        📋 Link kopieren
+      </button>
+    </div>
+
+    <div class="status-msg" id="copyStatus">✅ Link kopiert!</div>
+
+    <div class="share-section">
+      <div class="share-label">📲 Direkt teilen:</div>
+      <a href="#" id="whatsappShare" class="btn btn-share btn-whatsapp" target="_blank">
+        WhatsApp
+      </a>
+      <a href="#" id="facebookShare" class="btn btn-share btn-facebook" target="_blank">
+        Facebook
+      </a>
+      <a href="#" id="telegramShare" class="btn btn-share btn-telegram" target="_blank">
+        Telegram
+      </a>
+      <a href="#" id="emailShare" class="btn btn-share btn-email">
+        Email
+      </a>
+    </div>
+
+    <div class="bookmark-tip">
+      💡 Tipp: Setze ein Lesezeichen (Strg+D / Cmd+D) auf diese Seite,<br>um deinen Link
+jederzeit wiederzufinden!
+    </div>
   </div>
 
   <script>
     // Configuration
-    const FORM_BASE_URL = "https://docs.google.com/forms/d/e/1FAIpQLSeQ8Z0slHeXLRrBcnu8gK_NAQx1qegHNRpfzIsvkFW1nZ4iuw/viewform";
-    const FORM_EMBED_URL = "https://docs.google.com/forms/d/e/1FAIpQLSeQ8Z0slHeXLRrBcnu8gK_NAQx1qegHNRpfzIsvkFW1nZ4iuw/viewform?embedded=true";
+    const FORM_BASE_URL = "https://docs.google.com/forms/d/e/1FAIpQLSeQ8Z0slHeXLRrBcnu8gK_NAQx1qe
+gHNRpfzIsvkFW1nZ4iuw/viewform";
+    const FORM_EMBED_URL = "https://docs.google.com/forms/d/e/1FAIpQLSeQ8Z0slHeXLRrBcnu8gK_NAQx1q
+egHNRpfzIsvkFW1nZ4iuw/viewform?embedded=true";
     const LANDING_PAGE_URL = window.location.origin + window.location.pathname;
 
     // Get URL parameters
     const urlParams = new URLSearchParams(window.location.search);
-    const referredBy = urlParams.get('ref'); // Who referred this person
+    const referredBy = urlParams.get('ref');
 
     // Generate unique referral code
     function generateUniqueCode() {
-      // Short alphanumeric code
       const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
       let code = 'REF_';
       for (let i = 0; i < 6; i++) {
@@ -339,39 +223,26 @@
     let myReferralCode = localStorage.getItem('myReferralCode');
 
     if (!myReferralCode) {
-      // Generate new code for first-time visitor
       myReferralCode = generateUniqueCode();
       localStorage.setItem('myReferralCode', myReferralCode);
-
-      // Also store when it was created
       localStorage.setItem('referralCodeCreated', new Date().toISOString());
     }
 
-    // Display the referral code
-    document.getElementById('referralCode').textContent = myReferralCode;
-    document.getElementById('footerCode').textContent = myReferralCode;
-
-    // Build the referral link (landing page with their code)
+    // Build the referral link
     const myReferralLink = `${LANDING_PAGE_URL}?ref=${encodeURIComponent(myReferralCode)}`;
     document.getElementById('referralLink').textContent = myReferralLink;
 
     // Build the Google Form URL with pre-populated data
     let formUrlWithParams = FORM_EMBED_URL;
-
-    // Add this person's referral code
-    formUrlWithParams += `&entry.825929421=__other_option__&entry.825929421.other_option_response=${encodeURIComponent(myReferralCode)}`;
-
-    // If they were referred by someone, track it
-    // NOTE: You'll need to add a second hidden field to your form for this
-    // if (referredBy) {
-    //   formUrlWithParams += `&entry.XXXXXX=${encodeURIComponent(referredBy)}`;
-    // }
+    formUrlWithParams += `&entry.825929421=__other_option__&entry.825929421.other_option_response
+=${encodeURIComponent(myReferralCode)}`;
 
     // Load the form in iframe
     document.getElementById('googleForm').src = formUrlWithParams;
 
     // Share button setup
-    const shareText = "⚽ Hilf mir, diese Sport-App zu verbessern! 2-Minuten-Umfrage für alle Hobbysportler:";
+    const shareText = "⚽ Hilf mir, diese Sport-App zu verbessern! 2-Minuten-Umfrage für alle
+Hobbysportler:";
     const shareTextEncoded = encodeURIComponent(shareText);
     const linkEncoded = encodeURIComponent(myReferralLink);
 
@@ -385,14 +256,14 @@
       `https://t.me/share/url?url=${linkEncoded}&text=${shareTextEncoded}`;
 
     document.getElementById('emailShare').href =
-      `mailto:?subject=${encodeURIComponent("Sport-App Umfrage - Deine Meinung zählt!")}&body=${shareTextEncoded}%0A%0A${linkEncoded}`;
+      `mailto:?subject=${encodeURIComponent("Sport-App
+Umfrage")}&body=${shareTextEncoded}%0A%0A${linkEncoded}`;
 
     // Copy link function
     function copyLink() {
       navigator.clipboard.writeText(myReferralLink).then(() => {
         showCopyStatus();
       }).catch(err => {
-        // Fallback for older browsers
         const tempInput = document.createElement('input');
         tempInput.value = myReferralLink;
         document.body.appendChild(tempInput);
@@ -409,33 +280,10 @@
       setTimeout(() => status.classList.remove('show'), 3000);
     }
 
-    // Collapse/expand functionality
-    function toggleCollapse() {
-      const details = document.getElementById('linkDetails');
-      const btn = document.getElementById('toggleBtn');
-
-      if (details.classList.contains('collapsed')) {
-        details.classList.remove('collapsed');
-        btn.textContent = 'Link ausblenden ▲';
-      } else {
-        details.classList.add('collapsed');
-        btn.textContent = 'Link anzeigen ▼';
-      }
-    }
-
-    // Log referral tracking (for debugging)
+    // Log for debugging
     console.log('My Referral Code:', myReferralCode);
     if (referredBy) {
       console.log('Referred by:', referredBy);
-
-      // Optional: Show a message if they came via referral
-      // alert(`Du wurdest von ${referredBy} eingeladen!`);
-    }
-
-    // Optional: Track how old their code is
-    const created = localStorage.getItem('referralCodeCreated');
-    if (created) {
-      console.log('Code created:', created);
     }
   </script>
 </body>
