@@ -3,19 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FunPilot Umfrage - Sport-App Feedback</title>
+    <title>FunPilot Survey - Sports App Feedback</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        /* --- CORE LAYOUT FOR FULL-PAGE IFRAME --- */
+        html, body {
+            height: 100%;
+            overflow: hidden; /* Prevents the main page from scrolling */
+        }
 
         body {
           font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
           background: #DDE1C8;
-          min-height: 100vh;
-          padding: 0;
-          overflow-x: hidden;
+          display: flex;
+          flex-direction: column;
         }
 
         .form-container {
+          flex-grow: 1; /* Allows this container to fill available vertical space */
+          display: flex;
+          flex-direction: column;
           background: white;
           max-width: 800px;
           width: 100%;
@@ -25,284 +33,467 @@
 
         .form-embed {
           width: 100%;
-          min-height: 3850px;
-          height: auto;
+          height: 100%; /* Make iframe fill its container */
           border: none;
           display: block;
         }
 
-        .loading-message {
+        .hidden {
+            display: none !important;
+        }
+
+        .loading-message, .error-message {
           text-align: center;
           padding: 50px 20px;
           color: #666;
           font-size: 1.1em;
         }
+        .error-message { color: #ea4335; }
+        .error-message a { color: #667eea; font-weight: bold; }
 
-        .error-message {
-          text-align: center;
-          padding: 50px 20px;
-          color: #ea4335;
-          font-size: 1em;
-          line-height: 1.6;
+
+        /* --- NEW: COMPACT FLOATING REFERRAL BAR STYLES --- */
+        .referral-bar {
+            position: fixed; /* Floats on top of the page content */
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.95); /* Slightly transparent */
+            backdrop-filter: blur(5px); /* Frosted glass effect */
+            border-top: 1px solid #dcdcdc;
+            padding: 8px 15px; /* Reduced vertical padding for compactness */
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+            z-index: 1000; /* Ensures it's on top of the iframe */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap; /* Allows items to wrap on small screens */
+            gap: 8px;
         }
 
-        .error-message a {
-          color: #667eea;
-          font-weight: bold;
+        .referral-bar-content {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
         }
 
-        .referral-section {
-          background: white;
-          max-width: 800px;
-          width: 100%;
-          margin: 0 auto;
-          padding: 30px;
-          box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+        /* Language Flag Icons */
+        .flag-icon {
+            font-size: 24px;
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 4px;
+            transition: all 0.2s;
+            user-select: none;
+            border: 2px solid transparent;
         }
 
-        .referral-header {
-          color: #667eea;
-          font-weight: bold;
-          font-size: 1.1em;
-          margin-bottom: 15px;
-          text-align: center;
+        .flag-icon:hover {
+            background: rgba(102, 126, 234, 0.1);
+            border-color: #667eea;
+            transform: scale(1.1);
         }
 
-        .link-box {
-          background: #f8f9fa;
-          padding: 12px;
-          border-radius: 8px;
-          margin: 15px 0;
-          word-break: break-all;
-          font-family: monospace;
-          font-size: 0.8em;
-          color: #555;
-          border: 2px solid #667eea;
-          max-height: 80px;
-          overflow-y: auto;
+        .flag-icon:active {
+            transform: scale(0.95);
         }
 
-        .btn {
-          border: none;
-          padding: 12px 24px;
-          font-size: 0.95em;
-          border-radius: 8px;
-          cursor: pointer;
-          margin: 6px;
-          transition: all 0.3s;
-          text-decoration: none;
-          display: inline-block;
-          font-weight: 500;
+        .flag-icon.active {
+            border-color: #667eea;
+            background: rgba(102, 126, 234, 0.05);
         }
 
-        .btn-copy {
-          background: #667eea;
-          color: white;
+        /* Vertical Separator */
+        .vertical-separator {
+            width: 1px;
+            height: 28px;
+            background: #dcdcdc;
+            margin: 0 4px;
         }
 
-        .btn-copy:hover {
-          background: #5568d3;
-          transform: translateY(-1px);
+        /* Your Link Button */
+        .btn-your-link {
+            padding: 6px 12px;
+            font-size: 0.85em;
+            white-space: nowrap;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s;
         }
 
-        .btn-share {
-          color: white;
-          font-size: 0.9em;
-          padding: 10px 18px;
+        .btn-your-link:hover {
+            background: #5568d3;
+            transform: translateY(-1px);
         }
 
-        .btn-whatsapp { background: #25d366; }
-        .btn-whatsapp:hover { background: #20bd5a; }
-
-        .btn-facebook { background: #3b5998; }
-        .btn-facebook:hover { background: #334d84; }
-
-        .btn-email { background: #ea4335; }
-        .btn-email:hover { background: #d33426; }
-
-        .btn-telegram { background: #0088cc; }
-        .btn-telegram:hover { background: #0077b5; }
-
-        .share-section {
-          margin-top: 20px;
-          text-align: center;
+        .btn-your-link:active {
+            transform: translateY(0);
         }
 
-        .share-label {
-          font-size: 0.95em;
-          color: #666;
-          margin-bottom: 12px;
-          font-weight: 500;
+        /* Native Share Button */
+        .btn-native-share {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            background: #667eea;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            padding: 0;
+        }
+
+        .btn-native-share:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .btn-native-share:active {
+            transform: translateY(0);
+        }
+
+        .btn-native-share svg {
+            width: 20px;
+            height: 20px;
+            fill: white;
         }
 
         .status-msg {
-          color: #10b981;
-          font-weight: bold;
-          font-size: 0.9em;
-          margin-top: 10px;
-          opacity: 0;
-          transition: opacity 0.3s;
-          text-align: center;
+            position: absolute;
+            top: -35px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(16, 185, 129, 0.95);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.85em;
+            font-weight: 500;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+            white-space: nowrap;
         }
 
-        .status-msg.show { opacity: 1; }
-
-        .bookmark-tip {
-          margin-top: 30px;
-          padding-top: 20px;
-          border-top: 1px solid #e0e0e0;
-          text-align: center;
-          font-size: 0.7em;
-          color: #888;
-          line-height: 1.4;
+        .status-msg.show {
+            opacity: 1;
         }
+
 
         @media (max-width: 600px) {
-          .referral-section { padding: 20px; }
-          .btn { font-size: 0.85em; padding: 10px 16px; margin: 4px; }
-          .link-box { font-size: 0.7em; }
-          .bookmark-tip { font-size: 0.65em; }
+            .referral-bar { gap: 6px; padding: 6px 10px; }
+            .flag-icon { font-size: 20px; padding: 3px 6px; }
+            .btn-native-share { width: 32px; height: 32px; }
+            .btn-native-share svg { width: 18px; height: 18px; }
+        }
+
+        /* Language Switch Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-overlay.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+        }
+
+        .modal-text {
+            font-size: 1em;
+            color: #333;
+            margin-bottom: 20px;
+            line-height: 1.4;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .modal-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 0.9em;
+            transition: all 0.2s;
+        }
+
+        .modal-btn-yes {
+            background: #667eea;
+            color: white;
+        }
+
+        .modal-btn-yes:hover {
+            background: #5568d3;
+        }
+
+        .modal-btn-cancel {
+            background: #e0e0e0;
+            color: #333;
+        }
+
+        .modal-btn-cancel:hover {
+            background: #d0d0d0;
         }
     </style>
 </head>
 <body>
-<!-- Google Form at the top -->
-<div class="form-container">
-    <div class="loading-message" id="loadingMsg">
-        🔄 Umfrage wird geladen...
-    </div>
-    <iframe
-            id="googleForm"
-            class="form-embed"
-            style="display: none;"
-            frameborder="0"
-            marginheight="0"
-            marginwidth="0"
-            onload="handleFormLoad()"
-            onerror="handleFormError()">
-    </iframe>
+<!-- Google Form container -->
+<div class="form-container" id="formContainer">
+    <div class="loading-message" id="loadingMsg">🔄 <span id="loadingText">Loading survey...</span></div>
+    <iframe id="googleForm" class="form-embed" style="display: none;" frameborder="0" marginheight="0" marginwidth="0" onload="handleFormLoad()" onerror="handleFormError()"></iframe>
     <div class="error-message" id="errorMsg" style="display: none;">
-        ⚠️ Die Umfrage konnte nicht geladen werden.<br>
-        <a href="#" id="directFormLink" target="_blank">Klicke hier, um die Umfrage direkt zu öffnen</a>
+        ⚠️ <span id="errorText">Could not load survey.</span><br>
+        <a href="#" id="directFormLink" target="_blank"><span id="errorLinkText">Click here to open the survey directly</span></a>
     </div>
 </div>
 
-<!-- Referral section at the bottom -->
-<div class="referral-section">
-    <div class="referral-header">
-        🎁 Teile deinen persönlichen Link & erhalte 50% Rabatt
-    </div>
+<!-- NEW: Compact Floating Referral Bar (Visible during the survey) -->
+<div class="referral-bar" id="referralBar">
+    <div class="referral-bar-content">
+        <!-- Language Flags -->
+        <span class="flag-icon" id="flagDE" onclick="switchLanguage('de')" title="Deutsch">🇩🇪</span>
+        <span class="flag-icon" id="flagEN" onclick="switchLanguage('en')" title="English">🇬🇧</span>
 
-    <div class="link-box" id="referralLink">Wird generiert...</div>
+        <!-- Separator -->
+        <div class="vertical-separator"></div>
 
-    <div style="text-align: center;">
-        <button class="btn btn-copy" onclick="copyLink()">
-            📋 Link kopieren
+        <!-- Your Link Button -->
+        <button class="btn-your-link" onclick="copyLink()">
+            🔗 <span id="yourLinkText">Your Link</span>
+        </button>
+
+        <!-- Native Share Button -->
+        <button class="btn-native-share" onclick="nativeShare()" id="shareButton" title="Share">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z"/>
+            </svg>
         </button>
     </div>
+    <div class="status-msg" id="copyStatus">✅ <span id="copyStatusText">Link copied!</span></div>
+</div>
 
-    <div class="status-msg" id="copyStatus">✅ Link kopiert!</div>
 
-    <div class="share-section">
-        <div class="share-label">📲 Direkt teilen:</div>
-        <a href="#" id="whatsappShare" class="btn btn-share btn-whatsapp" target="_blank">
-            WhatsApp
-        </a>
-        <a href="#" id="facebookShare" class="btn btn-share btn-facebook" target="_blank">
-            Facebook
-        </a>
-        <a href="#" id="telegramShare" class="btn btn-share btn-telegram" target="_blank">
-            Telegram
-        </a>
-        <a href="#" id="emailShare" class="btn btn-share btn-email">
-            Email
-        </a>
-    </div>
-
-    <div class="bookmark-tip">
-        💡 Tipp: Setze ein Lesezeichen (Strg+D / Cmd+D) auf diese Seite,<br>um deinen Link jederzeit wiederzufinden!
+<!-- Language Switch Confirmation Modal -->
+<div class="modal-overlay" id="languageModal">
+    <div class="modal-content">
+        <div class="modal-text" id="modalText">Would you like to switch to English?</div>
+        <div class="modal-buttons">
+            <button class="modal-btn modal-btn-cancel" onclick="closeLanguageModal()"><span id="modalCancelText">Cancel</span></button>
+            <button class="modal-btn modal-btn-yes" onclick="confirmLanguageSwitch()"><span id="modalYesText">Yes</span></button>
+        </div>
     </div>
 </div>
 
 <script>
     console.log('Script starting...');
 
-    // Configuration
-    const FORM_ID = "1FAIpQLSeQ8Z0slHeXLRrBcnu8gK_NAQx1qegHNRpfzIsvkFW1nZ4iuw";
-    const FORM_BASE_URL = `https://docs.google.com/forms/d/e/${FORM_ID}/viewform`;
-    const FORM_EMBED_URL = `https://docs.google.com/forms/d/e/${FORM_ID}/viewform?embedded=true`;
+    // --- Configuration ---
+    const FORM_CONFIG = {
+        de: {
+            formId: "1FAIpQLSeQ8Z0slHeXLRrBcnu8gK_NAQx1qegHNRpfzIsvkFW1nZ4iuw",
+            lang: "de"
+        },
+        en: {
+            formId: "1FAIpQLSeX3Lud4s8L5dYt-DMcCWEL2Th1rXhGdE-mdzt_3fcmeZzmLw",
+            lang: "en"
+        }
+    };
 
-    // Get current page URL (for referral links)
-    let LANDING_PAGE_URL = window.location.href.split('?')[0]; // Remove any existing params
-    console.log('Landing page URL:', LANDING_PAGE_URL);
+    // Entry IDs for both forms (same for German and English)
+    const ENTRY_REFERRED_FROM = "265035231";  // Who referred this person
+    const ENTRY_UNIQUE_ID = "123651617";      // This person's unique ID
 
-    // Get URL parameters
-    const urlParams = new URLSearchParams(window.location.search);
-    const referredBy = urlParams.get('ref');
-    console.log('Referred by:', referredBy);
+    // Text translations
+    const TRANSLATIONS = {
+        de: {
+            loadingText: "Umfrage wird geladen...",
+            errorText: "Die Umfrage konnte nicht geladen werden.",
+            errorLinkText: "Klicke hier, um die Umfrage direkt zu öffnen",
+            yourLinkText: "Dein Link",
+            copyStatusText: "Link kopiert!",
+            shareTitle: "FunPilot Umfrage",
+            shareText: "🏀 Stell dir vor: Du willst spielen, und es klappt einfach. FunPilot macht's möglich. Sag uns, was du brauchst (dauert nur 3 Minuten):",
+            modalSwitchToEN: "Möchten Sie zur englischen Version wechseln?",
+            modalSwitchToDE: "Möchten Sie zur deutschen Version wechseln?",
+            modalCancel: "Abbrechen",
+            modalYes: "Ja"
+        },
+        en: {
+            loadingText: "Loading survey...",
+            errorText: "Could not load survey.",
+            errorLinkText: "Click here to open the survey directly",
+            yourLinkText: "Your Link",
+            copyStatusText: "Link copied!",
+            shareTitle: "FunPilot Survey",
+            shareText: "🏀 Imagine: You want to play, and it just works. FunPilot makes it happen. Tell us what you need (takes only 3 minutes):",
+            modalSwitchToEN: "Would you like to switch to English?",
+            modalSwitchToDE: "Would you like to switch to German?",
+            modalCancel: "Cancel",
+            modalYes: "Yes"
+        }
+    };
 
-    // Generate unique referral code
+    // --- Get URL Parameters ---
+    function getUrlParameter(name) {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(name);
+    }
+
+    // Extract "referred from" ID from URL (if someone clicked a referral link)
+    const referredFromId = getUrlParameter('ref') || '';
+
+    // --- Language Management ---
+    let currentLanguage = localStorage.getItem('surveyLanguage') || 'de';
+    let pendingLanguage = null;
+
+    function updateLanguageUI() {
+        // Update flag highlighting
+        document.getElementById('flagDE').classList.toggle('active', currentLanguage === 'de');
+        document.getElementById('flagEN').classList.toggle('active', currentLanguage === 'en');
+
+        // Update all text elements
+        const t = TRANSLATIONS[currentLanguage];
+        document.getElementById('loadingText').textContent = t.loadingText;
+        document.getElementById('errorText').textContent = t.errorText;
+        document.getElementById('errorLinkText').textContent = t.errorLinkText;
+        document.getElementById('yourLinkText').textContent = t.yourLinkText;
+        document.getElementById('copyStatusText').textContent = t.copyStatusText;
+
+        // Update HTML lang attribute
+        document.documentElement.lang = currentLanguage;
+    }
+
+    function switchLanguage(targetLang) {
+        if (targetLang === currentLanguage) {
+            return; // Already in this language
+        }
+
+        // Show confirmation modal
+        pendingLanguage = targetLang;
+        const t = TRANSLATIONS[currentLanguage];
+        const modalText = targetLang === 'en' ? t.modalSwitchToEN : t.modalSwitchToDE;
+
+        document.getElementById('modalText').textContent = modalText;
+        document.getElementById('modalCancelText').textContent = t.modalCancel;
+        document.getElementById('modalYesText').textContent = t.modalYes;
+        document.getElementById('languageModal').classList.add('show');
+    }
+
+    function closeLanguageModal() {
+        document.getElementById('languageModal').classList.remove('show');
+        pendingLanguage = null;
+    }
+
+    function confirmLanguageSwitch() {
+        if (pendingLanguage) {
+            currentLanguage = pendingLanguage;
+            localStorage.setItem('surveyLanguage', currentLanguage);
+            closeLanguageModal();
+            updateLanguageUI();
+
+            // Reload the form with new language
+            loadForm();
+        }
+    }
+
+    // --- Referral Code Logic ---
+    // This generates and persists the unique referral ID for the current user
+    // localStorage ensures it survives browser/computer restarts
     function generateUniqueCode() {
       const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
       let code = 'REF_';
       for (let i = 0; i < 6; i++) {
-        code += chars.charAt(Math.floor(Math.random() * chars.length));
+          code += chars.charAt(Math.floor(Math.random() * chars.length));
       }
       return code;
     }
 
-    // Get or create referral code (persistent via localStorage)
     let myReferralCode = localStorage.getItem('myReferralCode');
-
     if (!myReferralCode) {
       myReferralCode = generateUniqueCode();
       localStorage.setItem('myReferralCode', myReferralCode);
-      localStorage.setItem('referralCodeCreated', new Date().toISOString());
-      console.log('Generated new code:', myReferralCode);
+      console.log('Generated new referral code:', myReferralCode);
     } else {
-      console.log('Using existing code:', myReferralCode);
+      console.log('Using existing referral code from localStorage:', myReferralCode);
     }
 
-    // Build the referral link
+    // The personal referral link that this user can share
+    let LANDING_PAGE_URL = window.location.href.split('?')[0];
     const myReferralLink = `${LANDING_PAGE_URL}?ref=${encodeURIComponent(myReferralCode)}`;
-    console.log('My referral link:', myReferralLink);
 
-    // Update the link display
-    const linkElement = document.getElementById('referralLink');
-    if (linkElement) {
-      linkElement.textContent = myReferralLink;
-      console.log('Link element updated');
-    } else {
-      console.error('Link element not found!');
+    // --- Form URL Builder ---
+    function buildFormUrl(lang, embedded = true) {
+        const config = FORM_CONFIG[lang];
+        const baseUrl = `https://docs.google.com/forms/d/e/${config.formId}/viewform`;
+        const params = new URLSearchParams();
+
+        if (embedded) {
+            params.append('embedded', 'true');
+        }
+
+        // Add referred from ID (who referred this person)
+        if (referredFromId) {
+            params.append(`entry.${ENTRY_REFERRED_FROM}`, referredFromId);
+        }
+
+        // Add unique ID (this person's referral code)
+        params.append(`entry.${ENTRY_UNIQUE_ID}`, myReferralCode);
+
+        return `${baseUrl}?${params.toString()}`;
     }
 
-    // Build the Google Form URL with pre-populated data
-    let formUrlWithParams = FORM_EMBED_URL;
-    formUrlWithParams += `&entry.825929421=__other_option__&entry.825929421.other_option_response=${encodeURIComponent(myReferralCode)}`;
+    // --- Load Form ---
+    function loadForm() {
+        const formUrl = buildFormUrl(currentLanguage, true);
+        const iframe = document.getElementById('googleForm');
+        iframe.src = formUrl;
 
-    console.log('Form URL:', formUrlWithParams);
+        // Update direct link
+        const directUrl = buildFormUrl(currentLanguage, false);
+        document.getElementById('directFormLink').href = directUrl;
 
-    // Load the form in iframe
-    const iframe = document.getElementById('googleForm');
-    if (iframe) {
-      iframe.src = formUrlWithParams;
-      console.log('Iframe src set');
-    } else {
-      console.error('Iframe not found!');
+        console.log('Loading form:', formUrl);
     }
 
-    // Set direct link fallback
-    document.getElementById('directFormLink').href = formUrlWithParams.replace('embedded=true', '');
-
-    // Handle form load success
+    // --- Form Load Handler ---
     function handleFormLoad() {
-      console.log('Form loaded successfully');
-      document.getElementById('loadingMsg').style.display = 'none';
-      document.getElementById('googleForm').style.display = 'block';
-      document.getElementById('errorMsg').style.display = 'none';
+        console.log('Iframe onload event fired.');
+        // Hide loading message and show the form
+        document.getElementById('loadingMsg').style.display = 'none';
+        document.getElementById('googleForm').style.display = 'block';
+        document.getElementById('errorMsg').style.display = 'none';
     }
 
-    // Handle form load error
     function handleFormError() {
       console.error('Form failed to load');
       document.getElementById('loadingMsg').style.display = 'none';
@@ -310,50 +501,111 @@
       document.getElementById('errorMsg').style.display = 'block';
     }
 
-    // Timeout fallback (if form takes too long)
-    setTimeout(function() {
-      const iframe = document.getElementById('googleForm');
-      if (iframe.style.display === 'none') {
-        console.log('Form loading timeout, showing iframe anyway');
-        handleFormLoad();
-      }
-    }, 3000);
+    // --- Share and Copy Logic ---
+    function nativeShare() {
+        const t = TRANSLATIONS[currentLanguage];
 
-    // Share button setup
-    const shareText = "⚽ Hilf mir, diese Sport-App zu verbessern! 2-Minuten-Umfrage für alle Hobbysportler:";
-    const shareTextEncoded = encodeURIComponent(shareText);
-    const linkEncoded = encodeURIComponent(myReferralLink);
+        // Check if Web Share API is supported
+        if (navigator.share) {
+            navigator.share({
+                title: t.shareTitle,
+                text: t.shareText,
+                url: myReferralLink
+            })
+            .then(() => {
+                console.log('Shared successfully via Web Share API');
+            })
+            .catch((error) => {
+                // User cancelled or error occurred
+                if (error.name !== 'AbortError') {
+                    console.log('Share failed, falling back to copy:', error);
+                    fallbackShare();
+                }
+            });
+        } else {
+            // Fallback for browsers that don't support Web Share API
+            console.log('Web Share API not supported, using fallback');
+            fallbackShare();
+        }
+    }
 
-    document.getElementById('whatsappShare').href =
-      `https://wa.me/?text=${shareTextEncoded}%20${linkEncoded}`;
+    function fallbackShare() {
+        // Fallback: copy share message + link to clipboard
+        const t = TRANSLATIONS[currentLanguage];
+        const fullMessage = `${t.shareText}\n${myReferralLink}`;
 
-    document.getElementById('facebookShare').href =
-      `https://www.facebook.com/sharer/sharer.php?u=${linkEncoded}`;
+        // Copy the formatted message
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(fullMessage).then(() => {
+                showCopyStatus();
+            }).catch(err => {
+                console.error('Clipboard API failed, using fallback:', err);
+                fallbackCopyText(fullMessage);
+            });
+        } else {
+            fallbackCopyText(fullMessage);
+        }
+    }
 
-    document.getElementById('telegramShare').href =
-      `https://t.me/share/url?url=${linkEncoded}&text=${shareTextEncoded}`;
-
-    document.getElementById('emailShare').href =
-      `mailto:?subject=${encodeURIComponent("Sport-App Umfrage")}&body=${shareTextEncoded}%0A%0A${linkEncoded}`;
-
-    console.log('Share buttons configured');
-
-    // Copy link function
-    function copyLink() {
-      console.log('Copy button clicked');
-      navigator.clipboard.writeText(myReferralLink).then(() => {
-        console.log('Copied to clipboard');
-        showCopyStatus();
-      }).catch(err => {
-        console.log('Clipboard API failed, using fallback');
-        const tempInput = document.createElement('input');
-        tempInput.value = myReferralLink;
+    function fallbackCopyText(text) {
+        // Fallback for older browsers
+        const tempInput = document.createElement('textarea');
+        tempInput.value = text;
+        tempInput.style.position = 'fixed';
+        tempInput.style.opacity = '0';
         document.body.appendChild(tempInput);
+        tempInput.focus();
         tempInput.select();
-        document.execCommand('copy');
+
+        try {
+            const successful = document.execCommand('copy');
+            if (successful) {
+                showCopyStatus();
+            }
+        } catch (err) {
+            console.error('Fallback copy failed:', err);
+            alert('Copy failed. Please copy manually:\n\n' + text);
+        }
+
         document.body.removeChild(tempInput);
-        showCopyStatus();
-      });
+    }
+
+    function copyLink() {
+      // Modern clipboard API with fallback for older browsers
+      // Works on iOS, macOS, Android, and Windows
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(myReferralLink).then(() => {
+          showCopyStatus();
+        }).catch(err => {
+          console.error('Clipboard API failed, using fallback:', err);
+          fallbackCopy();
+        });
+      } else {
+        fallbackCopy();
+      }
+    }
+
+    function fallbackCopy() {
+      // Fallback for older browsers and iOS Safari
+      const tempInput = document.createElement('input');
+      tempInput.value = myReferralLink;
+      tempInput.style.position = 'fixed';
+      tempInput.style.opacity = '0';
+      document.body.appendChild(tempInput);
+      tempInput.focus();
+      tempInput.select();
+
+      try {
+        const successful = document.execCommand('copy');
+        if (successful) {
+          showCopyStatus();
+        }
+      } catch (err) {
+        console.error('Fallback copy failed:', err);
+        alert('Copy failed. Please copy the link manually: ' + myReferralLink);
+      }
+
+      document.body.removeChild(tempInput);
     }
 
     function showCopyStatus() {
@@ -362,7 +614,19 @@
       setTimeout(() => status.classList.remove('show'), 3000);
     }
 
+    // --- Initialize ---
+    console.log('Initializing...');
+    console.log('Current language:', currentLanguage);
+    console.log('Referred from ID:', referredFromId || 'none (new visitor)');
+    console.log('My referral code:', myReferralCode);
+    console.log('My referral link:', myReferralLink);
+    console.log('Web Share API supported:', !!navigator.share);
+
+    updateLanguageUI();
+    loadForm();
+
     console.log('Script initialization complete');
+    console.log('Note: Referral code persists in localStorage across browser restarts');
 </script>
 </body>
 </html>
