@@ -38,6 +38,13 @@
           display: block;
         }
 
+        .hero-image {
+          width: 100%;
+          display: block;
+          object-fit: cover;
+          max-height: 240px;
+        }
+
         .hidden {
             display: none !important;
         }
@@ -269,6 +276,7 @@
 <body>
 <!-- Google Form container -->
 <div class="form-container" id="formContainer">
+    <img src="funpilot_hero.jpg" alt="FunPilot - Sports Made Easy" class="hero-image" id="heroImage">
     <div class="loading-message" id="loadingMsg">🔄 <span id="loadingText">Loading survey...</span></div>
     <iframe id="googleForm" class="form-embed" style="display: none;" frameborder="0" marginheight="0" marginwidth="0" onload="handleFormLoad()" onerror="handleFormError()"></iframe>
     <div class="error-message" id="errorMsg" style="display: none;">
@@ -534,40 +542,42 @@
         const t = TRANSLATIONS[currentLanguage];
         const fullMessage = `${t.shareText}\n${myReferralLink}`;
 
-        // Copy the formatted message
-        if (navigator.clipboard && navigator.clipboard.writeText) {
-            navigator.clipboard.writeText(fullMessage).then(() => {
-                showCopyStatus();
-            }).catch(err => {
-                console.error('Clipboard API failed, using fallback:', err);
-                fallbackCopyText(fullMessage);
-            });
-        } else {
-            fallbackCopyText(fullMessage);
-        }
-    }
+        console.log('Fallback share - copying full message:', fullMessage);
 
-    function fallbackCopyText(text) {
-        // Fallback for older browsers
-        const tempInput = document.createElement('textarea');
-        tempInput.value = text;
-        tempInput.style.position = 'fixed';
-        tempInput.style.opacity = '0';
-        document.body.appendChild(tempInput);
-        tempInput.focus();
-        tempInput.select();
+        // For older browsers like IE, always use textarea method
+        // This is more reliable than navigator.clipboard on old browsers
+        const tempTextarea = document.createElement('textarea');
+        tempTextarea.value = fullMessage;
+        tempTextarea.style.position = 'fixed';
+        tempTextarea.style.top = '0';
+        tempTextarea.style.left = '0';
+        tempTextarea.style.width = '2em';
+        tempTextarea.style.height = '2em';
+        tempTextarea.style.padding = '0';
+        tempTextarea.style.border = 'none';
+        tempTextarea.style.outline = 'none';
+        tempTextarea.style.boxShadow = 'none';
+        tempTextarea.style.background = 'transparent';
+        tempTextarea.style.opacity = '0';
+
+        document.body.appendChild(tempTextarea);
+        tempTextarea.focus();
+        tempTextarea.select();
 
         try {
             const successful = document.execCommand('copy');
+            console.log('Copy command result:', successful);
             if (successful) {
                 showCopyStatus();
+            } else {
+                alert('Please copy this message:\n\n' + fullMessage);
             }
         } catch (err) {
-            console.error('Fallback copy failed:', err);
-            alert('Copy failed. Please copy manually:\n\n' + text);
+            console.error('Copy failed:', err);
+            alert('Please copy this message:\n\n' + fullMessage);
         }
 
-        document.body.removeChild(tempInput);
+        document.body.removeChild(tempTextarea);
     }
 
     function copyLink() {
