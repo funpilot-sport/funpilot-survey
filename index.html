@@ -465,6 +465,9 @@
         const baseUrl = `https://docs.google.com/forms/d/e/${config.formId}/viewform`;
         const params = new URLSearchParams();
 
+        // Enable pre-population (required for entry parameters to work)
+        params.append('usp', 'pp_url');
+
         if (embedded) {
             params.append('embedded', 'true');
         }
@@ -490,7 +493,11 @@
         const directUrl = buildFormUrl(currentLanguage, false);
         document.getElementById('directFormLink').href = directUrl;
 
-        console.log('Loading form:', formUrl);
+        console.log('=== FORM URL DEBUG ===');
+        console.log('Referred from ID:', referredFromId || '(none - new visitor)');
+        console.log('My referral code:', myReferralCode);
+        console.log('Full form URL:', formUrl);
+        console.log('Entry IDs: referred_from=' + ENTRY_REFERRED_FROM + ', unique_id=' + ENTRY_UNIQUE_ID);
     }
 
     // --- Form Load Handler ---
